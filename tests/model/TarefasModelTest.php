@@ -2,21 +2,35 @@
     namespace cadastroTarefasTest\TarefasModelTest;
 
     use PHPUnit\Framework\TestCase;
-    use \banco\DataBase;
     use \cadastroTarefas\model\TarefasModel;
 
     class TarefasModelTest extends TestCase{
 
-        protected DataBase $database;
         protected TarefasModel $tarefasModel;
 
         public function setUp():void
         {   
             $this->tarefasModel = new TarefasModel();
         }
+
         public function testInsereTarefa():void
         {
-            $this->assertTrue($this->tarefasModel->insereTarefa('testTarefa2','testeTarefa','2022-13-12'));
+            $this->assertTrue($this->tarefasModel->insereTarefa('testTarefa2','testeTarefa'));
+        }
+
+        public function testAlteraTarefa():void
+        {
+            $this->assertTrue($this->tarefasModel->alteraTarefa('novo Nome murilo','isso e um teste de update',11));
+        }
+
+        public function testExcluiTarefa():void
+        {
+            $this->assertTrue($this->tarefasModel->excluiTarefa(4));
+        }
+
+        public function testSelecionaTodasTarefas():void
+        {
+            $this->assertGreaterThan(0,count($this->tarefasModel->selecionaTodasTarefas(300,1)));
         }
     }
 

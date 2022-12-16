@@ -1,5 +1,9 @@
 <?php
-
+    // use ControladorRotas;
+    namespace controleApi;
+    // use \ControladorRotas\ControladorRotas;
+    use Exception;
+    require_once("../vendor/autoload.php");
     if (filter_var(ini_get("memory_limit"), FILTER_SANITIZE_NUMBER_INT) < 256) {
     ini_set('memory_limit', '256M');
     }
@@ -15,7 +19,7 @@
     header('Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With');
     header('Access-Control-Expose-Headers: Authorization');
 
-    require_once "{$_SERVER['DOCUMENT_ROOT']}/novaAPI/ControladorRotas.php";
+    require_once ("{$_SERVER['DOCUMENT_ROOT']}/cadastroTarefas/api/configApi/ControladorRotas.php");
     $route          = $_SERVER['PATH_INFO'];
     $method         = strtolower($_SERVER['REQUEST_METHOD']);
     $request        = array();
@@ -29,7 +33,7 @@
         $request = array_merge($request, $_POST);
     }
     try {
-        $router = ControladorRotas::getInstance($route, $request, __DIR__."/routers", getallheaders());
+        $router = \ControladorRotas\ControladorRotas::getInstance($route, $request, __DIR__."/routers", getallheaders());
         $router->$method();
         $error = ob_get_contents();
         ob_end_clean();

@@ -6,9 +6,11 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'configApi\\' => array($baseDir . '/configApi'),
     'cadastroTarefas\\' => array($baseDir . '/src'),
     'cadastroTarefasTest\\' => array($baseDir . '/tests'),
     'banco\\' => array($baseDir . '/database'),
+    'api\\' => array($baseDir . '/api'),
     'PhpParser\\' => array($vendorDir . '/nikic/php-parser/lib/PhpParser'),
     'Doctrine\\Instantiator\\' => array($vendorDir . '/doctrine/instantiator/src/Doctrine/Instantiator'),
     'DeepCopy\\' => array($vendorDir . '/myclabs/deep-copy/src/DeepCopy'),

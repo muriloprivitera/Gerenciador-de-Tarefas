@@ -6,7 +6,9 @@
         "psr-4": {
             "cadastroTarefas\\":"src/",
             "cadastroTarefasTest\\":"tests/",
-            "banco\\":"database/"
+            "banco\\":"database/",
+            "api\\":"api/",
+            "configApi\\":"configApi/"
         }
     }
 }

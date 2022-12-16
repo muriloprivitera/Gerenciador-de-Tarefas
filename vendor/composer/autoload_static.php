@@ -14,12 +14,17 @@ class ComposerStaticInit797a38082536bf4b101b0ad170957083
     public static $prefixLengthsPsr4 = array (
         'c' => 
         array (
+            'configApi\\' => 10,
             'cadastroTarefas\\' => 16,
             'cadastroTarefasTest\\' => 20,
         ),
         'b' => 
         array (
             'banco\\' => 6,
+        ),
+        'a' => 
+        array (
+            'api\\' => 4,
         ),
         'P' => 
         array (
@@ -33,6 +38,10 @@ class ComposerStaticInit797a38082536bf4b101b0ad170957083
     );
 
     public static $prefixDirsPsr4 = array (
+        'configApi\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/configApi',
+        ),
         'cadastroTarefas\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
@@ -44,6 +53,10 @@ class ComposerStaticInit797a38082536bf4b101b0ad170957083
         'banco\\' => 
         array (
             0 => __DIR__ . '/../..' . '/database',
+        ),
+        'api\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/api',
         ),
         'PhpParser\\' => 
         array (

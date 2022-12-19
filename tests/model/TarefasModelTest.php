@@ -32,6 +32,11 @@
         {
             $this->assertGreaterThan(0,count($this->tarefasModel->selecionaTodasTarefas(300,1)));
         }
+
+        public function testeCadastroHorasTarefa():void
+        {
+            $this->assertTrue($this->tarefasModel->cadastroHorasTarefa('10:50:22','13:30:25',1));
+        }
     }
 
 ?>

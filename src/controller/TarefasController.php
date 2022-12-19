@@ -33,6 +33,14 @@
         {
             return $this->tarefasModel->selecionaTodasTarefas($quantidade,$inicio);
         }
+
+        public function cadastroHorasTarefa(string $horaInicio, string $horaFim, int $id):string
+        {
+            if($this->tarefasModel->cadastroHorasTarefa($horaInicio,$horaFim,$id) !== true)throw new \Exception('Ocorreu ao inserir as horas');
+
+            return 'Horas inseridas com sucesso';
+        }
+
     }
 
 ?>

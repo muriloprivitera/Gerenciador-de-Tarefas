@@ -2,6 +2,7 @@
     namespace cadastroTarefas\model;
     
     use \banco\DataBase;
+    use cadastroTarefas\helpers\TarefasHelpers;
     use PDO;
     class TarefasModel{
 
@@ -10,6 +11,7 @@
         public function __construct()
         {
             $this->conexao = DataBase::novaConexao();
+            date_default_timezone_set('America/Sao_Paulo');
         }
 
         public function insereTarefa(string $nomeTarefa,string $descricaoTarefa):bool
@@ -57,5 +59,17 @@
             $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
             if($stmt->rowCount() == 0)return array();
             return $resultado;
+        }
+
+        public function cadastroHorasTarefa(string $horaInicio, string $horaFim, int $id):bool
+        {
+            $horaCalculada = TarefasHelpers::calculaHorasGasta($horaInicio,$horaFim);
+            $query = "UPDATE tarefa SET hora_inicio =?,
+                        hora_fim = ?,
+                        hora_calculada = ?,
+                        status_tarefa = ?
+                    WHERE id = ?";
+
+            return $this->conexao->prepare($query)->execute([$horaInicio,$horaFim,$horaCalculada,'F',$id]);
         }
     }

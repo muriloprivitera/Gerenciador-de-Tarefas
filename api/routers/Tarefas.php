@@ -3,6 +3,7 @@
     use \ControladorRotas\ControladorRotas;
 
     use \cadastroTarefas\controller\TarefasController;
+    use \cadastroTarefas\helpers\TarefasHelpers;
 
     class Tarefas extends ControladorRotas{
 
@@ -99,6 +100,23 @@
             } catch (\Exception $e) {
                 return $this->body(array(
                     'status'   => 'Erro',
+                    'mensagem' => $e->getMessage(),
+                ));
+            }
+        }
+
+        private function cadastroHorasTarefa():mixed
+        {
+            try {
+                return $this->body(array(
+                    'status'=>'OK',
+                    'horasCalculadas'=>TarefasHelpers::calculaHorasGasta($this->request['horaInicio'],$this->request['horaFim']),
+                    'mensagem'=>$this->tarefasController->cadastroHorasTarefa($this->request['horaInicio'],$this->request['horaFim'],$this->request['id'])
+                ));
+            } catch (\Exception $e) {
+                return $this->body(array(
+                    'status'   => 'Erro',
+                    'horasCalculadas'=>'',
                     'mensagem' => $e->getMessage(),
                 ));
             }

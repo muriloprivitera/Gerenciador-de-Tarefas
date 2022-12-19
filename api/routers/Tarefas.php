@@ -45,11 +45,10 @@
         private function selecionaTodasTarefas():mixed
         {
             try {
-                $tarefas = $this->tarefasController->selecionaTodasTarefas($this->request['quantidade'],$this->request['inicio']);
                 return $this->body(array(
                     'status'=>'OK',
                     'mensagem'=> 'Tarefas buscadas com sucesso',
-                    'tarefas'=> $tarefas
+                    'tarefas'=> $this->tarefasController->selecionaTodasTarefas($this->request['quantidade'],$this->request['inicio'])
                 ));
             } catch (\Exception $e) {
                 return $this->body(array(
@@ -118,6 +117,23 @@
                     'status'   => 'Erro',
                     'horasCalculadas'=>'',
                     'mensagem' => $e->getMessage(),
+                ));
+            }
+        }
+
+        private function retornaDadosRelatorio():mixed
+        {
+            try {
+                return $this->body(array(
+                    'status'=>'OK',
+                    'mensagem'=>'Dados encontrados',
+                    'tarefas'=>$this->tarefasController->retornaDadosRelatorio()
+                ));
+            } catch (\Exception $e) {
+                return $this->body(array(
+                    'status'   => 'Erro',
+                    'mensagem' => $e->getMessage(),
+                    'tarefas'=>'',
                 ));
             }
         }

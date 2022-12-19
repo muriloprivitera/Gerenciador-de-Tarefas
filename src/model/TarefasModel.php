@@ -6,7 +6,7 @@
     use PDO;
     class TarefasModel{
 
-        private object $conexao;//procurar saber
+        private object $conexao;
 
         public function __construct()
         {
@@ -64,12 +64,26 @@
         public function cadastroHorasTarefa(string $horaInicio, string $horaFim, int $id):bool
         {
             $horaCalculada = TarefasHelpers::calculaHorasGasta($horaInicio,$horaFim);
+            $atualizadoEm = date("Y-m-d H:i:s");
             $query = "UPDATE tarefa SET hora_inicio =?,
                         hora_fim = ?,
                         hora_calculada = ?,
-                        status_tarefa = ?
+                        status_tarefa = ?,
+                        atualizado_em = ?
                     WHERE id = ?";
 
-            return $this->conexao->prepare($query)->execute([$horaInicio,$horaFim,$horaCalculada,'F',$id]);
+            return $this->conexao->prepare($query)->execute([$horaInicio,$horaFim,$horaCalculada,'F',$atualizadoEm,$id]);
+        }
+
+        public function retornaDadosRelatorio():array
+        {
+            $query = "SELECT nome_tarefa,criado_em,atualizado_em,hora_calculada FROM tarefa WHERE status_tarefa = :status_tarefa";
+
+            $stmt = $this->conexao->prepare($query);
+            $stmt->bindValue(':status_tarefa','F',PDO::PARAM_STR);
+            $stmt->execute();
+            $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if($stmt->rowCount() == 0)return array();
+            return $resultado;
         }
     }

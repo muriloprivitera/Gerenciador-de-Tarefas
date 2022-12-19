@@ -41,6 +41,10 @@
             return 'Horas inseridas com sucesso';
         }
 
+        public function retornaDadosRelatorio():array
+        {
+            return $this->tarefasModel->retornaDadosRelatorio();
+        }
     }
 
 ?>

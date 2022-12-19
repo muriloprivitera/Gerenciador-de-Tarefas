@@ -137,5 +137,20 @@
                 ));
             }
         }
+
+        private function insereCategoria():mixed
+        {
+            try {
+                return $this->body(array(
+                    'status'=>'OK',
+                    'mensagem'=>$this->tarefasController->insereCategoria($this->request['categorias'],$this->request['id'])
+                ));
+            } catch (\Exception $e) {
+                return $this->body(array(
+                    'status'   => 'Erro',
+                    'mensagem' => $e->getMessage(),
+                ));
+            }
+        }
     }
 ?>

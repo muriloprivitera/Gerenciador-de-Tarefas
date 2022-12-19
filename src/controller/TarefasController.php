@@ -45,6 +45,13 @@
         {
             return $this->tarefasModel->retornaDadosRelatorio();
         }
+
+        public function insereCategoria(string $insereCategoria, int $id):string
+        {
+            if($this->tarefasModel->insereCategoria($insereCategoria,$id) !== true)throw new \Exception('Ocorreu um erro ao inserir a categoria na tarefa');
+
+            return 'Categoria inserida com sucesso';
+        }
     }
 
 ?>

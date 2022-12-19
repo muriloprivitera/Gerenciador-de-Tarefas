@@ -42,6 +42,11 @@
         {
             $this->assertGreaterThan(0,count($this->tarefasModel->retornaDadosRelatorio()));
         }
+
+        public function testInsereCategorias():void
+        {
+            $this->assertTrue($this->tarefasModel->insereCategoria('pessoal,david',11));
+        }
     }
 
 ?>

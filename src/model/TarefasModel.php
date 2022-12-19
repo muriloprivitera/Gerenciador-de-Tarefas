@@ -86,4 +86,17 @@
             if($stmt->rowCount() == 0)return array();
             return $resultado;
         }
+
+        public function insereCategoria(string $categorias, int $id):bool
+        {
+            $atualizadoEm = date("Y-m-d H:i:s");
+            $query = "UPDATE tarefa
+                        SET categorias = ?,
+                            atualizado_em = ? 
+                        WHERE id = ?";
+            $stmt = $this->conexao->prepare($query);
+            $stmt->execute([$categorias,$atualizadoEm,$id]);
+            if($stmt->rowCount() == 0)return false;
+            return true;
+        }
     }

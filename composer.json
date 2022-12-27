@@ -10,5 +10,8 @@
             "api\\":"api/",
             "configApi\\":"configApi/"
         }
+    },
+    "require": {
+        "firebase/php-jwt": "^6.3"
     }
 }

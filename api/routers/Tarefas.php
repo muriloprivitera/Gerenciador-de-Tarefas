@@ -14,31 +14,34 @@
             parent::__construct($paramsUrl, $request, $headers);
 
             $this->tarefasController = new TarefasController();
+            $this->headers['authorization'] ??= 'indefinido';
         }
 
         public function get():mixed
         {
             list($metodoEspecifico) = $this->paramsUrl;
-
+            Usuarios::validaTokenCodificado($this->headers['authorization']);
             return $this->$metodoEspecifico();
         }
 
         public function post():mixed
         {
             list($metodoEspecifico) = $this->paramsUrl;
-
+            Usuarios::validaTokenCodificado($this->headers['authorization']);
             return $this->$metodoEspecifico();
         }
 
         public function put():mixed
         {
             list($metodoEspecifico) = $this->paramsUrl;
+            Usuarios::validaTokenCodificado($this->headers['authorization']);
             return $this->$metodoEspecifico();
         }
 
         public function delete():mixed
         {
             list($metodoEspecifico) = $this->paramsUrl;
+            Usuarios::validaTokenCodificado($this->headers['authorization']);
             return $this->$metodoEspecifico();
         }
 
@@ -48,7 +51,7 @@
                 return $this->body(array(
                     'status'=>'OK',
                     'mensagem'=> 'Tarefas buscadas com sucesso',
-                    'tarefas'=> $this->tarefasController->selecionaTodasTarefas($this->request['quantidade'],$this->request['inicio'])
+                    'tarefas'=> $this->tarefasController->selecionaTodasTarefas($this->request['quantidade'],$this->request['inicio'],$this->request['usuarioPai'])
                 ));
             } catch (\Exception $e) {
                 return $this->body(array(
@@ -64,7 +67,7 @@
             try {
                 return $this->body(array(
                     'status'=>'OK',
-                    'mensagem'=> $this->tarefasController->insereTarefa($this->request['nomeTarefa'],$this->request['descricaoTarefa'])
+                    'mensagem'=> $this->tarefasController->insereTarefa($this->request['nomeTarefa'],$this->request['descricaoTarefa'],$this->request['usuarioPai'])
                 ));
             } catch (\Exception $e) {
                 return $this->body(array(

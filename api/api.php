@@ -1,7 +1,5 @@
 <?php
-    // use ControladorRotas;
     namespace controleApi;
-    // use \ControladorRotas\ControladorRotas;
     use Exception;
     require_once("../vendor/autoload.php");
     if (filter_var(ini_get("memory_limit"), FILTER_SANITIZE_NUMBER_INT) < 256) {

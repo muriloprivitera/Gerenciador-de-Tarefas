@@ -3,7 +3,6 @@ namespace ControladorRotas;
 include('RespostaRotas.php');
 use Exception;
 use \RespostaRotas;
-// use api\routers\Tarefas;
 
 abstract class ControladorRotas{
 

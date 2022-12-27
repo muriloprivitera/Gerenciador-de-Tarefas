@@ -14,13 +14,13 @@
             date_default_timezone_set('America/Sao_Paulo');
         }
 
-        public function insereTarefa(string $nomeTarefa,string $descricaoTarefa):bool
+        public function insereTarefa(string $nomeTarefa,string $descricaoTarefa,int $idUsuario):bool
         {
             $criadoEm = date("Y-m-d H:i:s");
 
-            $query = "INSERT INTO tarefa(nome_tarefa,descricao_tarefa,criado_em)
-                        VALUES(?,?,?)";
-            return $this->conexao->prepare($query)->execute([$nomeTarefa,$descricaoTarefa,$criadoEm]);
+            $query = "INSERT INTO tarefa(nome_tarefa,descricao_tarefa,criado_em,usuario_pai)
+                        VALUES(?,?,?,?)";
+            return $this->conexao->prepare($query)->execute([$nomeTarefa,$descricaoTarefa,$criadoEm,$idUsuario]);
         }
 
         public function alteraTarefa(string $nomeTarefa,string $descricaoTarefa,int $id):bool
@@ -48,13 +48,14 @@
             return true;
         }
 
-        public function selecionaTodasTarefas(int $quantidade, int $inicio):array
+        public function selecionaTodasTarefas(int $quantidade, int $inicio, int $usuarioPai):array
         {
             
-            $query = "SELECT * FROM tarefa LIMIT :quantidade OFFSET :inicio";
+            $query = "SELECT * FROM tarefa WHERE usuario_pai = :usuarioPai LIMIT :quantidade OFFSET :inicio";
             $stmt = $this->conexao->prepare($query);
             $stmt->bindValue(':quantidade',$quantidade,PDO::PARAM_INT);
             $stmt->bindValue(':inicio',$inicio,PDO::PARAM_INT);
+            $stmt->bindValue(':usuarioPai',$usuarioPai,PDO::PARAM_INT);
             $stmt->execute();
             $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
             if($stmt->rowCount() == 0)return array();

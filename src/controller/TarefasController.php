@@ -11,9 +11,9 @@
             $this->tarefasModel = new TarefasModel();
         }
 
-        public function insereTarefa(string $nomeTarefa,string $descricaoTarefa):string
+        public function insereTarefa(string $nomeTarefa,string $descricaoTarefa,int $idUsuario):string
         {
-            if($this->tarefasModel->insereTarefa($nomeTarefa,$descricaoTarefa) !== true)throw new \Exception('Ocorreu um erro ao inserir a tarefa');
+            if($this->tarefasModel->insereTarefa($nomeTarefa,$descricaoTarefa,$idUsuario) !== true)throw new \Exception('Ocorreu um erro ao inserir a tarefa');
             return 'Tarefa inserida com sucesso';
         }
 
@@ -29,9 +29,9 @@
             return 'Tarefa excluida com sucesso';
         }
 
-        public function selecionaTodasTarefas(int $quantidade, int $inicio):array
+        public function selecionaTodasTarefas(int $quantidade, int $inicio, int $usuarioPai):array
         {
-            return $this->tarefasModel->selecionaTodasTarefas($quantidade,$inicio);
+            return $this->tarefasModel->selecionaTodasTarefas($quantidade,$inicio,$usuarioPai);
         }
 
         public function cadastroHorasTarefa(string $horaInicio, string $horaFim, int $id):string

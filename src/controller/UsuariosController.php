@@ -18,6 +18,13 @@
             return 'Usuario cadastrado com sucesso';
         }
 
+        public function usuarioEsqueceuSenha(string $email)
+        {
+            $model = $this->usuariosModel->usuarioEsqueceuSenha($email);
+            if($model == false)throw new \Exception('Ocorreu um erro ao alterar a senha, verifice o endereco de e-mail');
+            return $model;
+        }
+
         public function usuarioRealizaLogin(string $email,string $senha):string
         {
             require_once("../vendor/autoload.php");

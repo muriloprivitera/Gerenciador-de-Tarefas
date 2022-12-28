@@ -4,6 +4,7 @@
     use ControladorRotas\ControladorRotas;
     use Firebase\JWT\JWT;
     use Firebase\JWT\Key;
+    use \cadastroTarefas\helpers\Email;
 
     class Usuarios extends ControladorRotas{
 
@@ -48,6 +49,25 @@
                 return $this->body(array(
                     'status'=>'OK',
                     'mensagem'=> $this->usuariosController->insereUsuario($this->request['nome'],$this->request['email'],$this->request['senha']),
+                ));
+            } catch (\Exception $e) {
+                return $this->body(array(
+                    'status'   => 'Erro',
+                    'mensagem' => $e->getMessage(),
+                ));
+            }
+        }
+
+        private function usuarioEsqueceuSenha():mixed
+        {
+            try {
+                $mensagemEmail = '';
+                $email = new Email();
+                $this->usuariosController->usuarioEsqueceuSenha($this->request['email']);
+                $email->enviaEmail($this->request['email'],'Sua nova senha',$this->usuariosController->usuarioEsqueceuSenha($this->request['email']))? $mensagemEmail = 'Senha alterada, enviando a senha para seu e-mail' : $mensagemEmail = $email->retornaErro();
+                return $this->body(array(
+                    'status'=>'OK',
+                    'mensagem'=> $mensagemEmail
                 ));
             } catch (\Exception $e) {
                 return $this->body(array(

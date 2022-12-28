@@ -77,6 +77,21 @@
             }
         }
 
+        private function trocarSenha():mixed
+        {
+            try {
+                return $this->body(array(
+                    'status'=>'OK',
+                    'mensagem'=> ''
+                ));
+            } catch (\Exception $e) {
+                return $this->body(array(
+                    'status'   => 'Erro',
+                    'mensagem' => $e->getMessage(),
+                ));
+            }
+        }
+
         private function login():mixed
         {
             try {

@@ -37,6 +37,12 @@
             return $novaSenha;
         }
 
+        public function trocarSenha(string $senhaAntiga,string $novaSenha,string $email):bool
+        {
+            $usuario = $this->verificaEmailBd($email);
+            if(count($usuario) ==  0)return false;
+        }
+
         public function usuarioRealizaLogin(string $email):array
         {
             $usuarioExistente = $this->verificaEmailBd($email);

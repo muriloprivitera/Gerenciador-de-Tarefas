@@ -8,7 +8,7 @@ use PHPMailer\PHPMailer\Exception;
 class Email{
     const HOST = 'smtp.gmail.com';
     const USER = 'muriloprivitera24@gmail.com';
-    
+    const PASS = 'ifndfrupylecqouz'; // nao esquecer de tirar a senha
     const SECURE = 'TLS';
     const PORT = 587;
     const CHARSET = 'UTF-8';

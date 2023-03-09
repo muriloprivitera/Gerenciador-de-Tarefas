@@ -2,18 +2,10 @@
 namespace cadastroTarefas\helpers;
 
 use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
+// use PHPMailer\PHPMailer\Exception;
 
 
 class Email{
-    const HOST = 'smtp.gmail.com';
-    const USER = 'muriloprivitera24@gmail.com';
-    const PASS = 'ifndfrupylecqouz'; // nao esquecer de tirar a senha
-    const SECURE = 'TLS';
-    const PORT = 587;
-    const CHARSET = 'UTF-8';
-    const FROM_EMAIL = 'muriloprivitera24@gmail.com';
-    const FROM_NAME = 'Murilo Privitera';
 
     private string $erro;
 
@@ -29,11 +21,11 @@ class Email{
         $objMail = new PHPMailer(true);
         try {
             $objMail->isSMTP(true);
-            $objMail->Host = self::HOST;
+            $objMail->Host = $_ENV['HOST'];
             $objMail->SMTPAuth = true;
-            $objMail->Username = self::USER;
-            $objMail->Password = self::PASS;
-            $objMail->SMTPSecure = self::SECURE;
+            $objMail->Username = $_ENV['USER'];
+            $objMail->Password = $_ENV['PASS'];
+            $objMail->SMTPSecure = $_ENV['SECURE'];
             $objMail->SMTPDebug  = 3;
             $objMail->SMTPOptions = array(
                 'ssl' => array(
@@ -42,9 +34,9 @@ class Email{
                     'allow_self_signed' => true
                 )
             );
-            $objMail->Port = self::PORT;
-            $objMail->CharSet = self::CHARSET;
-            $objMail->setFrom(self::FROM_EMAIL,self::FROM_NAME);
+            $objMail->Port = $_ENV['PORT'];
+            $objMail->CharSet = $_ENV['CHARSET'];
+            $objMail->setFrom($_ENV['FROM_EMAIL'],$_ENV['FROM_NAME']);
 
             $destinatarios = is_array($destinatarios)? $destinatarios :[$destinatarios];
             
@@ -76,7 +68,7 @@ class Email{
 
             return $objMail->send();
 
-        } catch (Exception $e) {
+        } catch (\PHPMailer\PHPMailer\Exception $e) {
             $this->erro = $e->getMessage();
             return false;
         }

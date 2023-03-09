@@ -4,6 +4,7 @@
     use \banco\DataBase;
     use cadastroTarefas\helpers\TarefasHelpers;
     use PDO;
+    use \Dotenv\Dotenv;
     class TarefasModel{
 
         private object $conexao;
@@ -50,7 +51,12 @@
 
         public function selecionaTodasTarefas(int $quantidade, int $inicio, int $usuarioPai):array
         {
-            
+            $dotenv = Dotenv::createImmutable(__DIR__);
+            $dotenv->load();
+            print_r('<pre>');
+            print_r($_ENV['USER']);
+            print_r('</pre>');
+            exit;
             $query = "SELECT * FROM tarefa WHERE usuario_pai = :usuarioPai LIMIT :quantidade OFFSET :inicio";
             $stmt = $this->conexao->prepare($query);
             $stmt->bindValue(':quantidade',$quantidade,PDO::PARAM_INT);

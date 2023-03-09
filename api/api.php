@@ -31,6 +31,10 @@
         $request = array_merge($request, $_POST);
     }
     try {
+        $path = dirname(__FILE__,2);
+        $dotenv = \Dotenv\Dotenv::createUnsafeImmutable($path);
+        $dotenv->load();
+        
         $router = \ControladorRotas\ControladorRotas::getInstance($route, $request, __DIR__."/routers", getallheaders());
         $router->$method();
         $error = ob_get_contents();

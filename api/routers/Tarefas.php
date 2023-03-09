@@ -4,10 +4,12 @@
 
     use \cadastroTarefas\controller\TarefasController;
     use \cadastroTarefas\helpers\TarefasHelpers;
+    use \cadastroTarefas\controller\UsuariosController;
 
     class Tarefas extends ControladorRotas{
 
         private TarefasController $tarefasController;
+        private object $usuario;
 
         public function __construct($paramsUrl, $request, $headers)
         {
@@ -20,28 +22,28 @@
         public function get():mixed
         {
             list($metodoEspecifico) = $this->paramsUrl;
-            Usuarios::validaTokenCodificado($this->headers['authorization']);
+            $this->usuario = UsuariosController::validaTokenCodificado($this->headers['authorization']);
             return $this->$metodoEspecifico();
         }
 
         public function post():mixed
         {
             list($metodoEspecifico) = $this->paramsUrl;
-            Usuarios::validaTokenCodificado($this->headers['authorization']);
+            $this->usuario = UsuariosController::validaTokenCodificado($this->headers['authorization']);
             return $this->$metodoEspecifico();
         }
 
         public function put():mixed
         {
             list($metodoEspecifico) = $this->paramsUrl;
-            Usuarios::validaTokenCodificado($this->headers['authorization']);
+            $this->usuario = UsuariosController::validaTokenCodificado($this->headers['authorization']);
             return $this->$metodoEspecifico();
         }
 
         public function delete():mixed
         {
             list($metodoEspecifico) = $this->paramsUrl;
-            Usuarios::validaTokenCodificado($this->headers['authorization']);
+            $this->usuario = UsuariosController::validaTokenCodificado($this->headers['authorization']);
             return $this->$metodoEspecifico();
         }
 
@@ -51,7 +53,7 @@
                 return $this->body(array(
                     'status'=>'OK',
                     'mensagem'=> 'Tarefas buscadas com sucesso',
-                    'tarefas'=> $this->tarefasController->selecionaTodasTarefas($this->request['quantidade'],$this->request['inicio'],$this->request['usuarioPai'])
+                    'tarefas'=> $this->tarefasController->selecionaTodasTarefas($this->request['quantidade'],$this->request['inicio'],$this->usuario->id)
                 ));
             } catch (\Exception $e) {
                 return $this->body(array(
@@ -67,7 +69,7 @@
             try {
                 return $this->body(array(
                     'status'=>'OK',
-                    'mensagem'=> $this->tarefasController->insereTarefa($this->request['nomeTarefa'],$this->request['descricaoTarefa'],$this->request['usuarioPai'])
+                    'mensagem'=> $this->tarefasController->insereTarefa($this->request['nomeTarefa'],$this->request['descricaoTarefa'],$this->usuario->id)
                 ));
             } catch (\Exception $e) {
                 return $this->body(array(

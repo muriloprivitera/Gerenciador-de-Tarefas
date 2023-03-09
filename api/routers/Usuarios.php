@@ -2,8 +2,6 @@
     namespace api\routers;
     use \cadastroTarefas\controller\UsuariosController;
     use ControladorRotas\ControladorRotas;
-    use Firebase\JWT\JWT;
-    use Firebase\JWT\Key;
     use \cadastroTarefas\helpers\Email;
 
     class Usuarios extends ControladorRotas{
@@ -61,10 +59,11 @@
         private function usuarioEsqueceuSenha():mixed
         {
             try {
+                $infoUso = UsuariosController::validaTokenCodificado($this->headers['authorization']);
                 $mensagemEmail = '';
                 $email = new Email();
-                $this->usuariosController->usuarioEsqueceuSenha($this->request['email']);
-                $email->enviaEmail($this->request['email'],'Sua nova senha',$this->usuariosController->usuarioEsqueceuSenha($this->request['email']))? $mensagemEmail = 'Senha alterada, enviando a senha para seu e-mail' : $mensagemEmail = $email->retornaErro();
+                $this->usuariosController->usuarioEsqueceuSenha($infoUso->email);
+                $email->enviaEmail($infoUso->email,'Sua nova senha',$this->usuariosController->usuarioEsqueceuSenha($infoUso->email))? $mensagemEmail = 'Senha alterada, enviando a senha para seu e-mail' : $mensagemEmail = $email->retornaErro();
                 return $this->body(array(
                     'status'=>'OK',
                     'mensagem'=> $mensagemEmail
@@ -80,9 +79,10 @@
         private function trocarSenha():mixed
         {
             try {
+                $infoUso = UsuariosController::validaTokenCodificado($this->headers['authorization']);
                 return $this->body(array(
                     'status'=>'OK',
-                    'mensagem'=> ''
+                    'mensagem'=> $this->usuariosController->trocarSenha($this->request['senhaAntiga'],$this->request['senhaNova'],$infoUso->email)
                 ));
             } catch (\Exception $e) {
                 return $this->body(array(
@@ -109,12 +109,5 @@
             }
         }
 
-        public static function validaTokenCodificado(string $token):mixed
-        {
-            $jwt = str_replace('Bearer ','',$token);
-            $tokenValido = JWT::decode($jwt,new Key('minha_key_acesso','HS256'));
-            if(!is_object($tokenValido))throw new \Exception("Usuario nao autorizado", 401);
-            return $tokenValido;
-        }
     }
 ?>

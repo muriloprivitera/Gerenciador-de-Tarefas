@@ -1,7 +1,6 @@
 <?php
     namespace cadastroTarefas\model;
     use \banco\DataBase;
-    use \PDO;
 
     class UsuariosModel{
         private object $conexao;
@@ -40,7 +39,14 @@
         public function trocarSenha(string $senhaAntiga,string $novaSenha,string $email):bool
         {
             $usuario = $this->verificaEmailBd($email);
+            if(!password_verify($senhaAntiga,$usuario[0]['senha']))return false;
             if(count($usuario) ==  0)return false;
+            $atualizadoEm = date("Y-m-d H:i:s");
+            $query = "UPDATE usuario SET
+                        senha = ?,
+                        atualizado_em = ?
+                        WHERE email = ? LIMIT 1";
+            return $this->conexao->prepare($query)->execute([$novaSenha,$atualizadoEm,$email]);
         }
 
         public function usuarioRealizaLogin(string $email):array
@@ -55,7 +61,7 @@
             $stmt = $this->conexao->prepare($query);
             $stmt->bindValue(':email',$email);
             $stmt->execute();
-            $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $resultado = $stmt->fetchAll(\PDO::FETCH_ASSOC);
             return $resultado;
         }
     }

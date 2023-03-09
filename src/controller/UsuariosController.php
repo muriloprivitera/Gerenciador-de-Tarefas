@@ -1,7 +1,8 @@
 <?php
     namespace cadastroTarefas\controller;
     use cadastroTarefas\model\UsuariosModel;
-    // use \Firebase\JWT\JWT;
+    use Firebase\JWT\JWT;
+    use Firebase\JWT\Key;
 
     class UsuariosController{
 
@@ -18,6 +19,20 @@
             return 'Usuario cadastrado com sucesso';
         }
 
+        public function usuarioEsqueceuSenha(string $email):string|bool
+        {
+            $model = $this->usuariosModel->usuarioEsqueceuSenha($email);
+            if($model == false)throw new \Exception('Ocorreu um erro ao alterar a senha, verifice o endereco de e-mail');
+            return $model;
+        }
+
+        public function trocarSenha(string $senhaAntiga,string $senhaNova, string $email):string
+        {
+            if($this->usuariosModel->trocarSenha($senhaAntiga,$senhaNova,$email) === false)throw new \Exception('Ocorreu um erro ao alterar a senha');
+
+            return 'Senha alterada com Sucesso';
+        }
+
         public function usuarioRealizaLogin(string $email,string $senha):string
         {
             require_once("../vendor/autoload.php");
@@ -30,6 +45,14 @@
                 'nome' => $usuario[0]['nome'],
                 'id' => $usuario[0]['id'],
             ),'minha_key_acesso','HS256');
+        }
+
+        public static function validaTokenCodificado(string $token):mixed
+        {
+            $jwt = str_replace('Bearer ','',$token);
+            $tokenValido = JWT::decode($jwt,new Key('minha_key_acesso','HS256'));
+            if(!is_object($tokenValido))throw new \Exception("Usuario nao autorizado", 401);
+            return $tokenValido;
         }
 
     }

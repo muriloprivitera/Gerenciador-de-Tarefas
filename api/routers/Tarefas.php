@@ -53,6 +53,7 @@
                 return $this->body(array(
                     'status'=>'OK',
                     'mensagem'=> 'Tarefas buscadas com sucesso',
+                    'total'=> $this->tarefasController->pegaQuantidadeRegistro($this->usuario->id),
                     'tarefas'=> $this->tarefasController->selecionaTodasTarefas($this->request['quantidade'],$this->request['inicio'],$this->usuario->id)
                 ));
             } catch (\Exception $e) {
@@ -64,12 +65,61 @@
             }
         }
 
+        private function selecionaTodasSubTarefas():mixed
+        {
+            try {
+                return $this->body(array(
+                    'status'=>'OK',
+                    'mensagem'=> 'Tarefas buscadas com sucesso',
+                    'tarefas'=> $this->tarefasController->selecionaTodasSubTarefas($this->request['idTarefa'])
+                ));
+            } catch (\Exception $e) {
+                return $this->body(array(
+                    'status'   => 'Erro',
+                    'mensagem' => $e->getMessage(),
+                    'tarefas' => []
+                ));
+            }
+        }
+
+        private function abreDetalhesTarefa():mixed
+        {
+            try {
+                return $this->body(array(
+                    'status'=>'OK',
+                    'mensagem'=> 'Detalhes encontrados',
+                    'detalhes'=> $this->tarefasController->abreDetalhesTarefa($this->request['id'],$this->usuario->id)
+                ));
+            } catch (\Exception $e) {
+                return $this->body(array(
+                    'status'   => 'Erro',
+                    'mensagem' => $e->getMessage(),
+                    'detalhes' => []
+                ));
+            }
+        }
+
         private function insereTarefa():mixed
         {
             try {
                 return $this->body(array(
                     'status'=>'OK',
                     'mensagem'=> $this->tarefasController->insereTarefa($this->request['nomeTarefa'],$this->request['descricaoTarefa'],$this->usuario->id)
+                ));
+            } catch (\Exception $e) {
+                return $this->body(array(
+                    'status'   => 'Erro',
+                    'mensagem' => $e->getMessage(),
+                ));
+            }
+        }
+
+        private function insereSubTarefa():mixed
+        {
+            try {
+                return $this->body(array(
+                    'status'=>'OK',
+                    'mensagem'=> $this->tarefasController->insereSubTarefa($this->request['titulo'],$this->request['idTarefa'])
                 ));
             } catch (\Exception $e) {
                 return $this->body(array(

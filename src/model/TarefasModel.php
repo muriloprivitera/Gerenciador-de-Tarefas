@@ -4,7 +4,6 @@
     use \banco\DataBase;
     use cadastroTarefas\helpers\TarefasHelpers;
     use PDO;
-    use \Dotenv\Dotenv;
     class TarefasModel{
 
         private object $conexao;
@@ -22,6 +21,15 @@
             $query = "INSERT INTO tarefa(nome_tarefa,descricao_tarefa,criado_em,usuario_pai)
                         VALUES(?,?,?,?)";
             return $this->conexao->prepare($query)->execute([$nomeTarefa,$descricaoTarefa,$criadoEm,$idUsuario]);
+        }
+
+        public function insereSubTarefa(string $titulo,int $idTarefa):bool
+        {
+            $criadoEm = date("Y-m-d H:i:s");
+            $status_tarefa = "N";
+            $query = "INSERT INTO subtarefas(titulo,status_sub_tarefa,criado_em,tarefa_pai)
+                        VALUES(?,?,?,?)";
+            return $this->conexao->prepare($query)->execute([$titulo,$status_tarefa,$criadoEm,$idTarefa]);
         }
 
         public function alteraTarefa(string $nomeTarefa,string $descricaoTarefa,int $id):bool
@@ -51,12 +59,6 @@
 
         public function selecionaTodasTarefas(int $quantidade, int $inicio, int $usuarioPai):array
         {
-            $dotenv = Dotenv::createImmutable(__DIR__);
-            $dotenv->load();
-            print_r('<pre>');
-            print_r($_ENV['USER']);
-            print_r('</pre>');
-            exit;
             $query = "SELECT * FROM tarefa WHERE usuario_pai = :usuarioPai LIMIT :quantidade OFFSET :inicio";
             $stmt = $this->conexao->prepare($query);
             $stmt->bindValue(':quantidade',$quantidade,PDO::PARAM_INT);
@@ -66,6 +68,40 @@
             $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
             if($stmt->rowCount() == 0)return array();
             return $resultado;
+        }
+
+        public function selecionaTodasSubTarefas(int $tarefaPai):array
+        {
+            $query = "SELECT * FROM subtarefas WHERE tarefa_pai = :tarefaPai ";
+            $stmt = $this->conexao->prepare($query);
+            $stmt->bindValue(':tarefaPai',$tarefaPai,PDO::PARAM_INT);
+            $stmt->execute();
+            $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if($stmt->rowCount() == 0)return array();
+            return $resultado;
+        }
+
+        public function abreDetalhesTarefa(int $idTarefa, int $usuarioPai):array
+        {
+            $query = "SELECT * FROM tarefa WHERE usuario_pai = :usuarioPai AND id = :idTarefa";
+            $stmt = $this->conexao->prepare($query);
+            $stmt->bindValue(':idTarefa',$idTarefa,PDO::PARAM_INT);
+            $stmt->bindValue(':usuarioPai',$usuarioPai,PDO::PARAM_INT);
+            $stmt->execute();
+            $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+            if($stmt->rowCount() == 0)return array();
+            return $resultado;
+        }
+
+        public function pegaQuantidadeRegistro(int $usuarioPai)
+        {
+            $query = "SELECT count(*) AS total FROM tarefa WHERE usuario_pai = :usuarioPai";
+            $stmt = $this->conexao->prepare($query);
+            $stmt->bindValue(':usuarioPai',$usuarioPai,PDO::PARAM_INT);
+            $stmt->execute();
+            $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if($stmt->rowCount() == 0)return array();
+            return $resultado[0];
         }
 
         public function cadastroHorasTarefa(string $horaInicio, string $horaFim, int $id):bool

@@ -1,0 +1,14 @@
+.tarefa{
+    cursor: pointer;
+}
+
+.inputs-cadastro{
+    display: none;
+}
+
+.checkbox-exclusao{
+    margin-right: 5px;
+}
+.checkbox-none{
+    display: none;
+}

@@ -1,0 +1,15 @@
+
+
+.sub-tarefas{
+  min-height: 100px;
+  width: 100%;
+  padding: 10px;
+}
+.sub-tarefa-item{
+  border: #dee2e6 1px solid;
+  border-radius: 8px;
+  
+}
+.pointer{
+  cursor: pointer;
+}

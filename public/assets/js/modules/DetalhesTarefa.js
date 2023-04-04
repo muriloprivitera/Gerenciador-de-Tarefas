@@ -51,7 +51,6 @@ class DetalhesTarefa{
     }
 
     preencheInfoTarefa(tarefa){
-        console.log(tarefa)
         document.getElementById('titulo-tarefa').textContent = tarefa.nome_tarefa
         document.getElementById('descricao-tarefa').textContent = tarefa.descricao_tarefa
         document.getElementById('categorias').textContent += tarefa.categorias??'' 

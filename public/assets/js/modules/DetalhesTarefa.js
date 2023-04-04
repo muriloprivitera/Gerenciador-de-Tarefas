@@ -25,12 +25,23 @@ class DetalhesTarefa{
         document.addEventListener('DOMContentLoaded', () => document.getElementById('painel').classList.add('active'))
         document.addEventListener('DOMContentLoaded', () => this.abreDetalhesTarefa())
         document.addEventListener('DOMContentLoaded', () => this.buscaTodasSubTarefas())
+        document.addEventListener('DOMContentLoaded', () => this.acionaDropTarefaBD())
         document.getElementById('icon-adicionar-tarefa').addEventListener('click',()=> this.adicionarSubTarefa())
         document.addEventListener('dragover',(event)=> event.preventDefault())
         document.getElementById('drop-progresso').addEventListener('drop',(event)=> this.dropzone(event))
         document.getElementById('drop-finalizado').addEventListener('drop',(event)=> this.dropzone(event))
         document.getElementById('drop-obs').addEventListener('drop',(event)=> this.dropzone(event))
         document.getElementById('sub-tarefas').addEventListener('drop',(event)=> this.dropzone(event))
+    }
+
+    acionaDropTarefaBD(){
+        setTimeout(() => {
+            const elementos = document.querySelectorAll('.sub-tarefa-item');
+            Array.from(elementos).forEach((element)=>{
+                element.addEventListener('dragstart',(event)=> this.arrastarTarefa(event))
+                element.addEventListener('dragend',(event)=> this.arrastarFinalTarefa(event))
+            });
+        }, 600);
     }
 
     async abreDetalhesTarefa(){
@@ -93,8 +104,20 @@ class DetalhesTarefa{
         funcoesCookie.validaCookie(status);
         const arrayLen = this.preencheDivSubTarefaBd(tarefas);
         for (let index = 0; index < arrayLen.length; index++) {
-            document.getElementById('sub-tarefas').append(arrayLen[index])
-            
+            this.controleAppendTarefas(arrayLen[index]);
+        }
+    }
+
+    controleAppendTarefas(tarefas){
+        const statusSubTarefa = tarefas.getAttribute('data-status-tarefa');
+        if(statusSubTarefa == 'N'){
+            document.getElementById('sub-tarefas').append(tarefas);
+        }else if(statusSubTarefa == 'P'){
+            document.getElementById('drop-progresso').append(tarefas);
+        }else if(statusSubTarefa == 'F'){
+            document.getElementById('drop-finalizado').append(tarefas);
+        }else if(statusSubTarefa == 'O'){
+            document.getElementById('drop-obs').append(tarefas);
         }
     }
 
@@ -108,12 +131,28 @@ class DetalhesTarefa{
         return;
     }
 
+    async atualizaStatusSubTarefa(event){
+        const card = event.target.parentNode.parentNode.parentNode;
+        const idSubTarefa = event.target.getAttribute('id');
+        const statusColuna = card.getAttribute('data-status');
+        const response = await fetch(`${this.linkApi}/tarefas/atualizaStatusSubTarefa/${idSubTarefa}?status=${statusColuna}`,{
+            method: 'PUT',
+            mode: 'cors',
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization":`Bearer ${funcoesCookie.pegarCookie('token')}`
+            }
+        });
+        const {status} = await response.json();
+        funcoesCookie.validaCookie(status);
+    }
+
     preencheDivSubTarefaBd(subTarefas){
         let html =``;
         for (const tarefa of subTarefas) {
             html += 
             `
-            <div class="d-flex sub-tarefa-item" style="margin:5px;margin-top: 15px;" draggable="true">
+            <div class="d-flex sub-tarefa-item" id="${tarefa.id}" data-status-tarefa="${tarefa.status_sub_tarefa}" style="margin:5px;margin-top: 15px;" draggable="true">
                 <input style="margin:8px;height:40px;" class="form-control" value=${tarefa.titulo}>
             </div>
             `;
@@ -141,6 +180,7 @@ class DetalhesTarefa{
     }
     arrastarFinalTarefa(event){
         console.log("dragEnd");
+        this.atualizaStatusSubTarefa(event)
     }
     overDrop(event){
         console.log('over')
@@ -154,6 +194,7 @@ class DetalhesTarefa{
             event.target.append(this.dragged);
         }
     }
+
 }
 (() => {
     try {

@@ -207,5 +207,20 @@
                 ));
             }
         }
+
+        private function atualizaStatusSubTarefa():mixed
+        {
+            try {
+                return $this->body(array(
+                    'status'=>'OK',
+                    'mensagem'=>$this->tarefasController->atualizaStatusSubTarefa($this->paramsUrl[1],$this->request['status'])
+                ));
+            } catch (\Exception $e) {
+                return $this->body(array(
+                    'status'   => 'Erro',
+                    'mensagem' => $e->getMessage(),
+                ));
+            }
+        }
     }
 ?>

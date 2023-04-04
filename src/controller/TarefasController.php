@@ -84,6 +84,13 @@
 
             return 'Categoria inserida com sucesso';
         }
+
+        public function atualizaStatusSubTarefa(int $id,string $status)
+        {
+            if($this->tarefasModel->atualizaStatusSubTarefa($id,$status) !== true)throw new \Exception('Ocorreu um erro ao atualizar o status');
+
+            return 'Status atualizado com Sucesso';
+        }
     }
 
 ?>

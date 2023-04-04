@@ -142,4 +142,17 @@
             if($stmt->rowCount() == 0)return false;
             return true;
         }
+
+        public function atualizaStatusSubTarefa(int $id,string $status)
+        {
+            $atualizadoEm = date("Y-m-d H:i:s");
+            $query = "UPDATE subtarefas
+                        SET status_sub_tarefa = ?,
+                            atualizado_em = ?
+                        WHERE id = ?";
+            $stmt = $this->conexao->prepare($query);
+            $stmt->execute([$status,$atualizadoEm,$id]);
+            if($stmt->rowCount() == 0)return false;
+            return true;
+        }
     }

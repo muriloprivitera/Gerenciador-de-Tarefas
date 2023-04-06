@@ -27,6 +27,9 @@ class DetalhesTarefa{
         document.addEventListener('DOMContentLoaded', () => this.buscaTodasSubTarefas())
         document.addEventListener('DOMContentLoaded', () => this.acionaDropTarefaBD())
         document.getElementById('icon-adicionar-tarefa').addEventListener('click',()=> this.adicionarSubTarefa())
+        document.getElementsByClassName('btn-close')[0].addEventListener('click',()=> this.fecharModal())
+        document.getElementsByClassName('btn-danger')[0].addEventListener('click',()=> this.fecharModal())
+        document.getElementsByClassName('btn-success')[0].addEventListener('click',(event)=> this.enviaAtualizaDadosSubTarefa(event))
         document.addEventListener('dragover',(event)=> event.preventDefault())
         document.getElementById('drop-progresso').addEventListener('drop',(event)=> this.dropzone(event))
         document.getElementById('drop-finalizado').addEventListener('drop',(event)=> this.dropzone(event))
@@ -44,6 +47,23 @@ class DetalhesTarefa{
         }, 600);
     }
 
+    async enviaAtualizaDadosSubTarefa(event){
+        const descricao = document.getElementById('descricao-modal').value;
+        const idSubTarefa = document.getElementById('descricao-modal').getAttribute('data-id-subTarefa');
+        const response = await fetch(`${this.linkApi}/tarefas/atualizaSubTarefa/${idSubTarefa}?descricao=${descricao}`,{
+            method: 'PUT',
+            mode: 'cors',
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization":`Bearer ${funcoesCookie.pegarCookie('token')}`
+            }
+        });
+        const {status,mensagem} = await response.json();
+        funcoesCookie.validaCookie(status);
+        this.fecharModal()
+        window.location.reload();
+    }
+
     async abreDetalhesTarefa(){
         const urlParams = new URLSearchParams(window.location.search);
         const id = urlParams.get('id');
@@ -55,7 +75,7 @@ class DetalhesTarefa{
                 "Authorization":`Bearer ${funcoesCookie.pegarCookie('token')}`
             }
         });
-        const {status,total,detalhes} = await response.json();
+        const {status,detalhes} = await response.json();
         funcoesCookie.validaCookie(status);
         document.getElementById('load').classList.remove('spinner-border');
         this.preencheInfoTarefa(detalhes)
@@ -87,6 +107,7 @@ class DetalhesTarefa{
         });
         const {status,mensagem} = await response.json();
         funcoesCookie.validaCookie(status);
+        window.location.reload();
     }
 
     async buscaTodasSubTarefas(){
@@ -106,6 +127,11 @@ class DetalhesTarefa{
         for (let index = 0; index < arrayLen.length; index++) {
             this.controleAppendTarefas(arrayLen[index]);
         }
+    }
+
+    fecharModal(){
+        document.getElementsByClassName('modal')[0].style.display ="none";
+        console.log()
     }
 
     controleAppendTarefas(tarefas){
@@ -152,13 +178,34 @@ class DetalhesTarefa{
         for (const tarefa of subTarefas) {
             html += 
             `
-            <div class="d-flex sub-tarefa-item" id="${tarefa.id}" data-status-tarefa="${tarefa.status_sub_tarefa}" style="margin:5px;margin-top: 15px;" draggable="true">
-                <input style="margin:8px;height:40px;" class="form-control" value=${tarefa.titulo}>
+            <div class="d-flex sub-tarefa-item pointer" id="${tarefa.id}" onclick="DetalhesTarefa.clickInformacoesTarefas(this)" data-status-tarefa="${tarefa.status_sub_tarefa}" style="margin:5px;margin-top: 15px;" draggable="true">
+                <div style="margin:8px;height:40px;" class="form-control">${tarefa.titulo}</div>
             </div>
             `;
         }
         const node = new DOMParser().parseFromString(html,'text/html');
         return node.body.childNodes;
+    }
+
+    async clickInformacoesTarefas(elemento){
+        const idSubTarefa = elemento.getAttribute('id');
+        const response = await fetch(`${this.linkApi}/tarefas/pegaInfoUmaSubTarefa/${idSubTarefa}`,{
+            method: 'GET',
+            mode: 'cors',
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization":`Bearer ${funcoesCookie.pegarCookie('token')}`
+            }
+        });
+        const {status,mensagem} = await response.json();
+        funcoesCookie.validaCookie(status);
+        this.preencheModal(mensagem);
+    }
+
+    preencheModal(subTarefas){
+        document.getElementById('titulo-modal').innerText = subTarefas.titulo;
+        document.getElementById('descricao-div').innerHTML = `<textarea id="descricao-modal" data-id-subTarefa="${subTarefas.id}" style="width: 100%;min-height: 15rem;">${subTarefas.descricao}</textarea>`;
+        document.getElementsByClassName('modal')[0].style.display = 'block';
     }
 
     inserirDivSubTarefa(){

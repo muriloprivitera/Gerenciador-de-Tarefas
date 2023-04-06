@@ -81,6 +81,30 @@
             return $resultado;
         }
 
+        public function atualizaSubTarefa(int $idSubTarefa,string $descricao)
+        {
+            $atualizadoEm = date("Y-m-d H:i:s");
+            $query = "UPDATE subtarefas
+                        SET descricao = ?,
+                            atualizado_em = ?
+                        WHERE id = ?";
+            $stmt = $this->conexao->prepare($query);
+            $stmt->execute([$descricao,$atualizadoEm,$idSubTarefa]);
+            if($stmt->rowCount() == 0)return false;
+            return true;
+        }
+
+        public function pegaInfoUmaSubTarefa(int $idSubTarefa):array
+        {
+            $query = "SELECT * FROM subtarefas WHERE id = :idSubTarefa ";
+            $stmt = $this->conexao->prepare($query);
+            $stmt->bindValue(':idSubTarefa',$idSubTarefa,PDO::PARAM_INT);
+            $stmt->execute();
+            $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+            if($stmt->rowCount() == 0)return array();
+            return $resultado;
+        }
+
         public function abreDetalhesTarefa(int $idTarefa, int $usuarioPai):array
         {
             $query = "SELECT * FROM tarefa WHERE usuario_pai = :usuarioPai AND id = :idTarefa";
@@ -114,7 +138,6 @@
                         status_tarefa = ?,
                         atualizado_em = ?
                     WHERE id = ?";
-
             return $this->conexao->prepare($query)->execute([$horaInicio,$horaFim,$horaCalculada,'F',$atualizadoEm,$id]);
         }
 
@@ -143,7 +166,7 @@
             return true;
         }
 
-        public function atualizaStatusSubTarefa(int $id,string $status)
+        public function atualizaStatusSubTarefa(int $id,string $status):bool
         {
             $atualizadoEm = date("Y-m-d H:i:s");
             $query = "UPDATE subtarefas

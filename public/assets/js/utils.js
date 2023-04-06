@@ -16,8 +16,8 @@ export  const modalMensagem ={
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><a href="${redirect}" class="text-white-50 fw-bold">${tituloBotao}</a></button>
                             </div>
                         </div>
+                    </div>
                 </div>
-            </div>
             `;
             const node = new DOMParser().parseFromString(html,'text/html');
             return node.body.firstChild;

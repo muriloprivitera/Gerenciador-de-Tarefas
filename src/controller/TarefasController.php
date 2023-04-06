@@ -60,6 +60,11 @@
             return $this->tarefasModel->abreDetalhesTarefa($idTarefa,$usuarioPai);
         }
 
+        public function  pegaInfoUmaSubTarefa(int $idSubTarefa):array
+        {
+            return $this->tarefasModel->pegaInfoUmaSubTarefa($idSubTarefa);
+        }
+
         public function pegaQuantidadeRegistro(int $usuarioPai):int
         {
             $total = $this->tarefasModel->pegaQuantidadeRegistro($usuarioPai);
@@ -90,6 +95,13 @@
             if($this->tarefasModel->atualizaStatusSubTarefa($id,$status) !== true)throw new \Exception('Ocorreu um erro ao atualizar o status');
 
             return 'Status atualizado com Sucesso';
+        }
+
+        public function atualizaSubTarefa(int $idSubTarefa,string $descricao)
+        {
+            if($this->tarefasModel->atualizaSubTarefa($idSubTarefa,$descricao) !== true)throw new \Exception('Ocorreu um erro ao atualizar a subTarefa');
+
+            return 'SubTarefa atualizado com Sucesso';
         }
     }
 

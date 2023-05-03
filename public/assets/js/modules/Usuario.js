@@ -1,4 +1,4 @@
-import {modalMensagem} from '../utils.js';
+import {validaRequisicao} from '../utils.js';
 class Usuario {
     constructor(){
         this.init()
@@ -38,16 +38,7 @@ class Usuario {
 
         });
         const {status,mensagem} = await response.json();
-        const mensagemErro = modalMensagem.mensagemErro(mensagem);
-        const mensagemSucesso = modalMensagem.mensagemSucesso('Usuario Inserido',mensagem,'../../src/views/login.html','Fechar');
-
-        if(status !== 'OK'){
-            document.getElementById('body').append(mensagemErro);
-            document.getElementsByClassName('modal')[0].style.display = 'block';
-            return;
-        }
-        document.getElementById('body').append(mensagemSucesso);
-        document.getElementsByClassName('modal')[0].style.display = 'block';
+        validaRequisicao.validaRequisicao(status,'Usuario cadastrado',mensagem,'../../src/views/login.html');
     }
 
     async loginUsuario(){
@@ -65,17 +56,9 @@ class Usuario {
             
         });
         const {status,mensagem,token} = await response.json();
-        const mensagemErro = modalMensagem.mensagemErro(mensagem);
-        const mensagemSucesso = modalMensagem.mensagemSucesso('Login aceito',mensagem,'../../src/views/home.html','Ok');
-        if(status !== 'OK'){
-            document.getElementById('body').append(mensagemErro);
-            document.getElementsByClassName('modal')[0].style.display = 'block';
-            return;
-        }
         this.jwt = token;
-        document.getElementById('body').append(mensagemSucesso);
-        document.getElementsByClassName('modal')[0].style.display = 'block';
         document.cookie=`token=${token}`;
+        validaRequisicao.validaRequisicao(status,'Login Realizado',mensagem,'../../src/views/home.html');
     }
 
 }

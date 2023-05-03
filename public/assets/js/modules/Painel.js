@@ -89,7 +89,7 @@ class Painel{
         });
         const {status,mensagem} = await response.json();
         funcoesCookie.validaCookie(status);
-        validaRequisicao.validaRequisicao(status,mensagem,'../../src/views/painel.html');
+        validaRequisicao.validaRequisicao(status,'Tarefa Cadastrada',mensagem,'../../src/views/painel.html');
     }
 
     async excluiTarefa(){
@@ -106,7 +106,7 @@ class Painel{
             });
             const {status,mensagem} = await response.json();
             funcoesCookie.validaCookie(status);
-            validaRequisicao.validaRequisicao(status,mensagem,'../../src/views/painel.html');
+            validaRequisicao.validaRequisicao(status,'Tarefa Exluida',mensagem,'../../src/views/painel.html');
         }
     }
 

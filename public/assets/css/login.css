@@ -1,10 +1,44 @@
+/* html, body{ 
+    height:100%;
+} */
 .gradient-custom {
     /* fallback for old browsers */
+    /* height:100%; */
     background: #6a11cb;
-
     /* Chrome 10-25, Safari 5.1-6 */
     background: -webkit-linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1));
 
     /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1))
+}
+#email,#senha,#entrar{
+    border-radius: 8px;
+}
+label{
+    font-size: 1.5rem;
+}
+
+input:invalid{
+    border-color: #D80300;
+    background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 50% #FFFFFF;
+}
+
+input:focus:invalid{
+    animation: shake 0.2s ease-in-out 0s 2;
+    background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 50% #FFFFFF;
+}
+
+@keyframes shake {
+    0% {
+        margin-left: 0rem;
+    }
+    25% {
+        margin-left: 0.5rem;
+    }
+    75% {
+        margin-left: -0.5rem;
+    }
+    100% {
+        margin-left: 0rem;
+    }
 }

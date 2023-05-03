@@ -19,9 +19,16 @@
             return 'Usuario cadastrado com sucesso';
         }
 
-        public function usuarioEsqueceuSenha(string $email):string|bool
+        // public function usuarioEsqueceuSenha(string $email):string|bool
+        // {
+        //     $model = $this->usuariosModel->usuarioEsqueceuSenha($email);
+        //     if($model == false)throw new \Exception('Ocorreu um erro ao alterar a senha, verifice o endereco de e-mail');
+        //     return $model;
+        // }
+
+        public function usuarioEsqueceuSenha(string $email,string $senha):bool
         {
-            $model = $this->usuariosModel->usuarioEsqueceuSenha($email);
+            $model = $this->usuariosModel->usuarioEsqueceuSenha($email,$senha);
             if($model == false)throw new \Exception('Ocorreu um erro ao alterar a senha, verifice o endereco de e-mail');
             return $model;
         }
@@ -35,16 +42,35 @@
 
         public function usuarioRealizaLogin(string $email,string $senha):string
         {
-            require_once("../vendor/autoload.php");
             $usuario = $this->usuariosModel->usuarioRealizaLogin($email);
-            if(!password_verify($senha,$usuario[0]['senha'])) throw new \Exception('Usuario ou senha invalidos');
+            if(!password_verify($senha,$usuario['senha'])) throw new \Exception('Usuario ou senha invalidos');
             return \Firebase\JWT\JWT::encode(array(
                 'exp'=> time()+86400,
                 'iat'=> time(),
-                'email' => $usuario[0]['email'],
-                'nome' => $usuario[0]['nome'],
-                'id' => $usuario[0]['id'],
+                'email' => $usuario['email'],
+                'nome' => $usuario['nome'],
+                'id' => $usuario['id'],
             ),'minha_key_acesso','HS256');
+        }
+
+        public function geraTokenEsqueceuSenha(string $email):string
+        {
+            $usuario = $this->usuariosModel->verificaEmailBd($email);
+            return \Firebase\JWT\JWT::encode(array(
+                'exp'=> time()+86400,
+                'iat'=> time(),
+                'email' => $usuario['email'],
+                'nome' => $usuario['nome'],
+                'id' => $usuario['id'],
+            ),'minha_key_acesso','HS256');
+        }
+
+        public function validaEnviaEmail(string $email):bool
+        {
+            if(empty($this->usuariosModel->verificaEmailBd($email)['email'])){
+                return false;
+            }
+            return true;
         }
 
         public static function validaTokenCodificado(string $token):mixed

@@ -1,3 +1,4 @@
+import { sair } from "../utils.js";
 export default class NavBar{
     constructor(dom){
         this.dom = dom;
@@ -18,6 +19,10 @@ export default class NavBar{
     }
 
     async listeners() {
+        const idSair = this.elementos.elementoClickMenu[4].id;
+        setTimeout(() => {
+            document.getElementById(idSair).addEventListener('click',()=> sair.sair())
+        }, 200);
     }
 
     navMenu(){
@@ -54,7 +59,7 @@ export default class NavBar{
                                 <a class="nav-link" id="relatorios" href="./relatorios.html">Relatorio de Tarefas</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="./login.html">Sair</a>
+                                <a class="nav-link" id="sair">Sair</a>
                             </li>
                         </ul>
                     </div>
@@ -65,4 +70,5 @@ export default class NavBar{
         const node = new DOMParser().parseFromString(nav,'text/html');
         return node.body.firstChild;
     }
+
 }

@@ -29,7 +29,7 @@ class DetalhesTarefa{
         document.getElementById('icon-adicionar-tarefa').addEventListener('click',()=> this.adicionarSubTarefa())
         document.getElementsByClassName('btn-close')[0].addEventListener('click',()=> this.fecharModal())
         document.getElementsByClassName('btn-danger')[0].addEventListener('click',()=> this.fecharModal())
-        document.getElementsByClassName('btn-success')[0].addEventListener('click',(event)=> this.enviaAtualizaDadosSubTarefa(event))
+        document.getElementsByClassName('btn-success')[0].addEventListener('click',(event)=> this.enviaAtualizaDadosSubTarefa())
         document.addEventListener('dragover',(event)=> event.preventDefault())
         document.getElementById('drop-progresso').addEventListener('drop',(event)=> this.dropzone(event))
         document.getElementById('drop-finalizado').addEventListener('drop',(event)=> this.dropzone(event))
@@ -47,7 +47,7 @@ class DetalhesTarefa{
         }, 600);
     }
 
-    async enviaAtualizaDadosSubTarefa(event){
+    async enviaAtualizaDadosSubTarefa(){
         const descricao = document.getElementById('descricao-modal').value;
         const idSubTarefa = document.getElementById('descricao-modal').getAttribute('data-id-subTarefa');
         const response = await fetch(`${this.linkApi}/tarefas/atualizaSubTarefa/${idSubTarefa}?descricao=${descricao}`,{
@@ -204,7 +204,7 @@ class DetalhesTarefa{
 
     preencheModal(subTarefas){
         document.getElementById('titulo-modal').innerText = subTarefas.titulo;
-        document.getElementById('descricao-div').innerHTML = `<textarea id="descricao-modal" data-id-subTarefa="${subTarefas.id}" style="width: 100%;min-height: 15rem;">${subTarefas.descricao}</textarea>`;
+        document.getElementById('descricao-div').innerHTML = `<textarea id="descricao-modal" placeholder="Descri\u00e7\u00e3o da tarefa" data-id-subTarefa="${subTarefas.id}">${subTarefas.descricao}</textarea>`;
         document.getElementsByClassName('modal')[0].style.display = 'block';
     }
 

@@ -1,4 +1,5 @@
 import NavBar from './NavBar.js';
+import { funcoesCookie } from '../utils.js';
 
 class Relatorios{
     constructor(){
@@ -19,6 +20,7 @@ class Relatorios{
     async listeners() {
       document.addEventListener('DOMContentLoaded', () => this.divs.menu.append(this.SideBar.navMenu()))
       document.addEventListener('DOMContentLoaded', () => document.getElementById('relatorios').classList.add('active'))
+      document.addEventListener('DOMContentLoaded', () => funcoesCookie.validaCookieUsuario())
     }
 }
 (() => {

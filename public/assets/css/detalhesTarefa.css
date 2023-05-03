@@ -10,6 +10,32 @@
   border-radius: 8px;
   
 }
+
+div .modal-content{
+  background-color: #212529;
+}
+
+div .modal-header{
+  color: white;
+}
+
+#descricao-modal{
+  width: 100%;
+  min-height: 15rem;
+  padding: 12px 20px;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  background-color: #f8f8f8;
+  font-size: 16px;
+  resize: none;
+}
+
+textarea:focus,textarea:focus-visible{
+  outline: none;
+  border: 2px solid #0b5ed7 !important;
+}
+
 .pointer{
   cursor: pointer;
 }

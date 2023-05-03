@@ -44,6 +44,8 @@
         private function insereUsuario():mixed
         {
             try {
+                $email = new Email();
+                $email->enviaEmail($this->request['email'],'Bem vindo ao melhor sistema de gerencimento de tarefas',"Seja Bem Vindo a nossa Plataforma!");
                 return $this->body(array(
                     'status'=>'OK',
                     'mensagem'=> $this->usuariosController->insereUsuario($this->request['nome'],$this->request['email'],$this->request['senha']),
@@ -56,17 +58,33 @@
             }
         }
 
+        // private function usuarioEsqueceuSenha():mixed
+        // {
+        //     try {
+        //         $infoUso = UsuariosController::validaTokenCodificado($this->headers['authorization']);
+        //         $mensagemEmail = '';
+        //         $email = new Email();
+        //         $this->usuariosController->usuarioEsqueceuSenha($infoUso->email);
+        //         $email->enviaEmail($infoUso->email,'Sua nova senha',$this->usuariosController->usuarioEsqueceuSenha($infoUso->email))? $mensagemEmail = 'Senha alterada, enviando a senha para seu e-mail' : $mensagemEmail = $email->retornaErro();
+        //         return $this->body(array(
+        //             'status'=>'OK',
+        //             'mensagem'=> $mensagemEmail
+        //         ));
+        //     } catch (\Exception $e) {
+        //         return $this->body(array(
+        //             'status'   => 'Erro',
+        //             'mensagem' => $e->getMessage(),
+        //         ));
+        //     }
+        // }
+
         private function usuarioEsqueceuSenha():mixed
         {
             try {
                 $infoUso = UsuariosController::validaTokenCodificado($this->headers['authorization']);
-                $mensagemEmail = '';
-                $email = new Email();
-                $this->usuariosController->usuarioEsqueceuSenha($infoUso->email);
-                $email->enviaEmail($infoUso->email,'Sua nova senha',$this->usuariosController->usuarioEsqueceuSenha($infoUso->email))? $mensagemEmail = 'Senha alterada, enviando a senha para seu e-mail' : $mensagemEmail = $email->retornaErro();
                 return $this->body(array(
                     'status'=>'OK',
-                    'mensagem'=> $mensagemEmail
+                    'mensagem'=> $this->usuariosController->usuarioEsqueceuSenha($infoUso->email,$this->request['senha'])
                 ));
             } catch (\Exception $e) {
                 return $this->body(array(
@@ -92,6 +110,33 @@
             }
         }
 
+        private function validaEnviaEmail():mixed
+        {
+            try {
+                if(!$this->usuariosController->validaEnviaEmail($this->request['email'])){
+                    return $this->body(array(
+                        'status'=>'OK',
+                        'mensagem'=> 'Houve algum erro, tente novamente'
+                    ));
+                }
+                $token = $this->usuariosController->geraTokenEsqueceuSenha($this->request['email']);
+                $mensagem='';
+                $email = new Email();
+                $email->enviaEmail($this->request['email'],'Seu Link Para gerar uma nova Senha',"<a href='{$_SERVER["HTTP_HOST"]}/cadastroTarefas/src/views/trocaSenha.html'>Clique aqui para trocar sua senha</a>")? $mensagem='Email enviado' : $mensagem = $email->retornaErro();
+                return $this->body(array(
+                    'status'=>'OK',
+                    'mensagem'=> $mensagem,
+                    'token' =>$token
+                ));
+            } catch (\Exception $e) {
+                return $this->body(array(
+                    'status'   => 'Erro',
+                    'mensagem' => $e->getMessage(),
+                    'token' =>''
+                ));
+            }
+        }
+
         private function login():mixed
         {
             try {
@@ -105,6 +150,7 @@
                 return $this->body(array(
                     'status'   => 'Erro',
                     'mensagem' => $e->getMessage(),
+                    'token' =>''
                 ));
             }
         }

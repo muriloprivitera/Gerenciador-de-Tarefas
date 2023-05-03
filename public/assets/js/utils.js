@@ -13,7 +13,7 @@ export  const modalMensagem ={
                                 <p>${texto}</p>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><a href="${redirect}" class="text-white-50 fw-bold">${tituloBotao}</a></button>
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"><a href="${redirect}" style="text-decoration: none;color: white !important;" class="text-white-50 fw-bold">${tituloBotao}</a></button>
                             </div>
                         </div>
                     </div>
@@ -85,19 +85,30 @@ export const funcoesCookie ={
         if (funcoesCookie.pegarCookie(name)) {
             document.cookie = name + "=";
         }
+    },
+
+    validaCookieUsuario:()=>{
+        if(funcoesCookie.pegarCookie('token') == ''||!funcoesCookie.pegarCookie('token'))window.location = `../../src/views/login.html`;
     }
 }
 
 export const validaRequisicao ={
-    validaRequisicao:(status,mensagem,caminho)=>{
+    validaRequisicao:(status,titulo,mensagem,caminho)=>{
         const mensagemErro = modalMensagem.mensagemErro(mensagem);
         if(status !== 'OK'){
             document.getElementById('body').append(mensagemErro);
             document.getElementsByClassName('modal')[0].style.display = 'block';
             return;
         }
-        const mensagemSucesso = modalMensagem.mensagemSucesso('Tarefa',mensagem,caminho,'Fechar');
+        const mensagemSucesso = modalMensagem.mensagemSucesso(titulo,mensagem,caminho,'Fechar');
         document.getElementById('body').append(mensagemSucesso);
         document.getElementsByClassName('modal')[0].style.display = 'block';
     },
-} 
+}
+export const sair = {
+    sair:()=>{
+        document.cookie = 'token' + "=";
+        document.cookie = 'tokenEmail' + "=";
+        window.location.reload()
+    }
+}
